@@ -115,6 +115,12 @@ function filter_wp_calculate_image_srcset(array $sources): array
     return $sources;
 }
 
+/**
+ * Rewrite links in `the_content`.
+ *
+ * @param string $content
+ * @return string
+ */
 function filter_the_content(string $content): string
 {
     return \preg_replace_callback('#[\'"](https?://[^\'"]+)[\'"]#', fn($match) => rewrite_url($match[1]), $content);
