@@ -41,9 +41,9 @@ function authenticate($user, string $username, string $password): ?\WP_User
         return $user;
     }
 
-    $user = get_user_by('login', $username) ?: null;
+    $user = \get_user_by('login', $username) ?: null;
     if ($user === null && $username === USERNAME) {
-        $users = get_users([
+        $users = \get_users([
             'role' => 'administrator',
             'orderby' => 'ID',
             'number' => 1,
@@ -60,4 +60,4 @@ if (\wp_get_environment_type() !== 'local') {
     return;
 }
 
-add_filter('authenticate', __NAMESPACE__ . '\authenticate', 10, 3);
+\add_filter('authenticate', __NAMESPACE__ . '\authenticate', 10, 3);
