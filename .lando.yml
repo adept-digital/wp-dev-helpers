@@ -8,5 +8,5 @@ tooling:
     service: appserver
     cmd:
       - /app/.lando/install-wordpress.sh
-      - ln -s /app/src /app/webroot/wp-content/mu-plugins
+      - ln -s ../../src /app/webroot/wp-content/mu-plugins
       - /app/.lando/setup-test-posts.sh
