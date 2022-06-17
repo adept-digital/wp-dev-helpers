@@ -36,6 +36,13 @@ define( 'REWRITE_MEDIA_REMOTE', 'https://.../wp-content/uploads' );
 These plugins are developed using [Lando](https://docs.lando.dev/). The included `.lando.yml` will create a development
 environment with some data for testing.
 
+Run the following commands to get started:
+
+```shell
+lando start
+lando setup
+```
+
 ## License
 
 Copyright Adept Digital, David Gallagher and contributors. Released for use under the terms of the
