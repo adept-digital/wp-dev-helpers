@@ -3,7 +3,7 @@
  * Plugin Name:     Rewrite Media URLs
  * Plugin URI:      https://adeptdigital.com.au/wordpress/plugins/rewrite-media/
  * Description:     Rewrite URLs for media to a remote server for local development.
- * Version:         1.0.1
+ * Version:         1.0.2
  * Author:          Adept Digital
  * Author URI:      https://adeptdigital.com.au/
  * License:         GPL v2 or later
@@ -123,7 +123,7 @@ function filter_wp_calculate_image_srcset(array $sources): array
  */
 function filter_the_content(string $content): string
 {
-    return \preg_replace_callback('#[\'"](https?://[^\'"]+)[\'"]#', fn($match) => rewrite_url($match[1]), $content);
+    return \preg_replace_callback('#([\'"])(https?://[^\'"]+?)\\1#', fn($match) => $match[1] . rewrite_url($match[2]) . $match[1], $content);
 }
 
 /**
