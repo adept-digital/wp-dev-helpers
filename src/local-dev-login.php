@@ -3,7 +3,7 @@
  * Plugin Name:     Local Development Login
  * Plugin URI:      https://adeptdigital.com.au/wordpress/plugins/local-dev-login/
  * Description:     Allow login with a default username and password when developing locally.
- * Version:         1.0.0
+ * Version:         1.0.1
  * Author:          Adept Digital
  * Author URI:      https://adeptdigital.com.au/
  * License:         GPL v2 or later
@@ -25,7 +25,7 @@ const USERNAME = 'admin';
 /**
  * The password which can be used to authenticate any user.
  */
-const PASSWORD = 'password';
+const PASSWORD = '';
 
 /**
  * Authenticate the user with the password specified by `PASSWORD`.
