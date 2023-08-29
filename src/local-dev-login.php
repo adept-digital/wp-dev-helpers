@@ -3,7 +3,7 @@
  * Plugin Name:     Local Development Login
  * Plugin URI:      https://adeptdigital.com.au/wordpress/plugins/local-dev-login/
  * Description:     Allow login with a default username and password when developing locally.
- * Version:         1.0.1
+ * Version:         1.0.2
  * Author:          Adept Digital
  * Author URI:      https://adeptdigital.com.au/
  * License:         GPL v2 or later
@@ -54,6 +54,32 @@ function authenticate($user, string $username, string $password): ?\WP_User
 }
 
 /**
+ * Allow an empty password when `PASSWORD` is empty.
+ *
+ * Required for WordPress 6.3+.
+ *
+ * @return void
+ */
+function allow_empty_password(): void
+{
+    if (PASSWORD !== '') {
+        return;
+    }
+
+    echo <<<'HTML'
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const password_input = document.querySelector('#user_pass');
+            if (!password_input) {
+                return;
+            }
+            password_input.required = false;
+        });
+        </script>
+        HTML;
+}
+
+/**
  * Check environment and initialize the plugin.
  */
 if (\wp_get_environment_type() !== 'local') {
@@ -61,3 +87,4 @@ if (\wp_get_environment_type() !== 'local') {
 }
 
 \add_filter('authenticate', __NAMESPACE__ . '\authenticate', 10, 3);
+\add_action('login_form', __NAMESPACE__ . '\allow_empty_password');
