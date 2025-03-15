@@ -3,7 +3,7 @@
  * Plugin Name:     Local Development Login
  * Plugin URI:      https://adeptdigital.com.au/wordpress/plugins/local-dev-login/
  * Description:     Allow login with a default username and password when developing locally.
- * Version:         1.1.0
+ * Version:         1.2.0
  * Author:          Adept Digital
  * Author URI:      https://adeptdigital.com.au/
  * License:         GPL v2 or later
@@ -26,6 +26,11 @@ const USERNAME = 'admin';
  * The password which can be used to authenticate any user.
  */
 const PASSWORD = '';
+
+/**
+ * Maximum number of users to display in the users list per role.
+ */
+const USER_LIST_MAX_PER_ROLE = 5;
 
 /**
  * Authenticate the user with the password specified by `PASSWORD`.
@@ -86,36 +91,30 @@ function allow_empty_password(): void
  */
 function add_user_list(): void
 {
-    /** @var array<\WP_User> $users */
-    $users = get_users([
-        'orderby' => 'ID',
-        'order' => 'ASC',
-        'count_total' => false,
-    ]);
+    $users = [];
+    foreach (\array_keys(\wp_roles()->roles) as $role) {
+        /** @var array<\WP_User> $users */
+        $role_users = \get_users([
+            'role' => $role,
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'count_total' => false,
+            'number' => USER_LIST_MAX_PER_ROLE,
+        ]);
+        $users = [...$users, ...$role_users];
+    }
 
     if (!$users) {
         return;
     }
 
-    \usort($users, function ($user1, $user2) {
-        $id1 = $user1->ID ?? 0;
-        $id2 = $user2->ID ?? 0;
-        $role1 = $user1->roles[0] ?? '';
-        $role2 = $user2->roles[0] ?? '';
-
-        if ($role1 === $role2) {
-            return $id1 <=> $id2;
-        }
-        return $role1 <=> $role2;
-    });
-
     $default_user = $users[0]->user_login ?? '';
     ?>
     <datalist id="ad-dev-login-user-list">
         <?php foreach ($users as $user): ?>
-            <option value="<?= esc_attr($user->user_login) ?>">
+            <option value="<?= \esc_attr($user->user_login) ?>">
                 <?php $roles = \implode(', ', $user->roles) ?>
-                <?= esc_html("#{$user->ID} {$user->user_login}: {$roles}") ?>
+                <?= \esc_html("#{$user->ID} {$user->user_login}: {$roles}") ?>
             </option>
         <?php endforeach; ?>
     </datalist>
